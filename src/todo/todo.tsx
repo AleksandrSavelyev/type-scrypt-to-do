@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, FC } from 'react';
 import InputModule from './components/inputModule/inputModule';
 import TaskComponent from './components/task/taskComponent';
 import * as types from './types/types';
-import * as todoActions from './actions/actions';
-import { useDispatch, shallowEqual } from 'react-redux';
-import { useTypedSelector } from '../utils/useSelector';
-import './index.css'
+import './index.css';
 
-const Todo = () => {
-    const tasks = useTypedSelector(state => state.reducer.tasks, shallowEqual);
+export interface Props {
+    tasks: Array<types.taskType>;
+    addTask: Function;
+    deleteTask: Function;
+    checkTask: Function;
+}
+
+const Todo:FC<Props> = props => {
+
+    const {
+        tasks,
+        addTask,
+        deleteTask,
+        checkTask,
+    } = props;
+
     const [inputValue, setInputValue] = useState('');
-    const dispatch = useDispatch();
 
     const getInputValue = (value: string): void => {
         setInputValue(value);
@@ -23,14 +33,19 @@ const Todo = () => {
             isDone: false,
         }
 
-        dispatch(todoActions.AddTask(task));
+        addTask(task);
+        setInputValue('');
     }
 
     const renderTask = tasks.map((task: types.taskType) => (
         <TaskComponent
+
             key={task.id}
             id={task.id}
             text={task.text}
+            isDone={task.isDone}
+            deleteTask={deleteTask}
+            checkTask={checkTask}
         />
     ))
 
@@ -39,6 +54,7 @@ const Todo = () => {
             <InputModule
                 createTask={createTask}
                 getInputValue={getInputValue}
+                inputValue={inputValue}
             />
             <div className={'todo-wrapper_task-wrapper'}>
                 {renderTask}

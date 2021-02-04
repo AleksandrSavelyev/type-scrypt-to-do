@@ -3,11 +3,13 @@ import './index.css'
 
 export interface Props {
     createTask: any;
+    inputValue: string;
     getInputValue: Function;
 }
 const InputModule:FC<Props> = props => {
     const {
         createTask,
+        inputValue,
         getInputValue,
     } = props;
 
@@ -17,6 +19,7 @@ const InputModule:FC<Props> = props => {
                 <input
                     onChange={(event => getInputValue(event.target.value))}
                     className={'input-wrapper_input'}
+                    value={inputValue}
                     type={'text'}/>
             </div>
             <div className={'wrapper_button-wrapper button-wrapper'}>
